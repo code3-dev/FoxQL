@@ -32,15 +32,6 @@
 composer require foxql/foxql
 ```
 
-### Manual Installation
-
-1. Download the library files
-2. Include the autoloader in your project
-
-```php
-require_once 'path/to/foxql/vendor/autoload.php';
-```
-
 ## 🚀 Quick Start
 
 ```php
