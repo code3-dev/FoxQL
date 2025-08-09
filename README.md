@@ -23,6 +23,7 @@
 - 🧩 **Modular Design** - Use only what you need with a lightweight core
 - 📊 **Powerful Query Builder** - Construct complex queries with ease
 - 🛠️ **Schema Management** - Create and modify database structures programmatically
+- 🏗️ **Migration System** - Laravel-inspired migrations for managing database schema changes
 
 ## 📦 Installation
 
@@ -62,6 +63,24 @@ try {
 }
 ```
 
+## 🏗️ Database Migrations
+
+FoxQL includes a powerful migration system for managing database schema changes:
+
+```php
+// Create a table using the migration builder
+$db->createTable('users', function($table) {
+    $table->increments('id');
+    $table->string('name', 100)->notNull();
+    $table->string('email', 100)->notNull()->unique();
+    $table->timestamps(); // Adds created_at and updated_at columns
+});
+
+// Run migrations from a directory
+$migrations = $db->migrate('/path/to/migrations');
+
+// See the complete example in examples/migration_example.php
+```
 ## 📚 Documentation
 
 Explore our comprehensive documentation for detailed usage instructions:
@@ -73,7 +92,7 @@ Explore our comprehensive documentation for detailed usage instructions:
 | [Connection](src/docs/connect.md) | [Insert](src/docs/insert.md) | [Create Table](src/docs/create.md) | [Query](src/docs/query.md) |
 | [Select](src/docs/select.md) | [Update](src/docs/update.md) | [Drop Table](src/docs/drop.md) | [Execute](src/docs/execute.md) |
 | [Get](src/docs/get.md) | [Delete](src/docs/delete.md) | [Action](src/docs/action.md) | |
-| [Has](src/docs/has.md) | [Replace](src/docs/replace.md) | | |
+| [Has](src/docs/has.md) | [Replace](src/docs/replace.md) | [Migration](src/docs/migration.md) | |
 
 ### 📊 Aggregation Functions
 

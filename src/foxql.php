@@ -20,6 +20,7 @@ use FoxQL\Models\Avg;
 use FoxQL\Models\Sum;
 use FoxQL\Models\Create;
 use FoxQL\Models\Drop;
+use FoxQL\Models\Migration;
 use FoxQL\Core\Pdo;
 use FoxQL\Core\Raw;
 use PDO as NativePDO;
@@ -173,6 +174,13 @@ class FoxQL
     protected $drop;
 
     /**
+     * The Migration model instance.
+     *
+     * @var \FoxQL\Models\Migration
+     */
+    protected $migration;
+
+    /**
      * The last error message.
      *
      * @var string|null
@@ -240,6 +248,7 @@ class FoxQL
         $this->sum = new Sum($this->pdo, $this->prefix);
         $this->create = new Create($this->pdo, $this->prefix);
         $this->drop = new Drop($this->pdo, $this->prefix);
+        $this->migration = new Migration($this->pdo, $this->prefix);
     }
 
     /**
@@ -1086,6 +1095,201 @@ class FoxQL
     public function getDrop(): Drop
     {
         return $this->drop;
+    }
+    
+    /**
+     * Get the Migration model instance.
+     *
+     * @return \FoxQL\Models\Migration The Migration model instance
+     */
+    public function getMigration(): Migration
+    {
+        return $this->migration;
+    }
+    
+    /**
+     * Create a new table using the migration builder.
+     *
+     * Example usage:
+     * ```php
+     * $database->createTable('users', function($table) {
+     *     $table->increments('id');
+     *     $table->string('name');
+     *     $table->string('email')->unique();
+     *     $table->timestamps();
+     * });
+     * ```
+     *
+     * @param string $table The table name
+     * @param callable $callback The table definition callback
+     * @return bool True on success, false on failure
+     */
+    public function createTable(string $table, callable $callback): bool
+    {
+        try {
+            return $this->migration->createTable($table, $callback);
+        } catch (PDOException $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
+    }
+    
+    /**
+     * Drop a table using the migration builder.
+     *
+     * Example usage:
+     * ```php
+     * $database->dropTable('users');
+     * ```
+     *
+     * @param string $table The table name
+     * @return bool True on success, false on failure
+     */
+    public function dropTable(string $table): bool
+    {
+        try {
+            return $this->migration->dropTable($table);
+        } catch (PDOException $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
+    }
+    
+    /**
+     * Rename a table using the migration builder.
+     *
+     * Example usage:
+     * ```php
+     * $database->renameTable('users', 'customers');
+     * ```
+     *
+     * @param string $from The current table name
+     * @param string $to The new table name
+     * @return bool True on success, false on failure
+     */
+    public function renameTable(string $from, string $to): bool
+    {
+        try {
+            return $this->migration->renameTable($from, $to);
+        } catch (PDOException $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
+    }
+    
+    /**
+     * Alter a table structure using the migration builder.
+     *
+     * Example usage:
+     * ```php
+     * $database->alterTable('users', function($table) {
+     *     $table->string('username', 50)->after('name');
+     *     $table->dropColumn('old_column');
+     * });
+     * ```
+     *
+     * @param string $table The table name
+     * @param callable $callback The table modification callback
+     * @return bool True on success, false on failure
+     */
+    public function alterTable(string $table, callable $callback): bool
+    {
+        try {
+            return $this->migration->alterTable($table, $callback);
+        } catch (PDOException $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
+    }
+    
+    /**
+     * Run migrations from a directory.
+     *
+     * Example usage:
+     * ```php
+     * $migrations = $database->migrate('/path/to/migrations');
+     * echo "Executed migrations: " . implode(", ", $migrations);
+     * ```
+     *
+     * @param string $directory The directory containing migration files
+     * @return array Array of executed migrations
+     */
+    public function migrate(string $directory): array
+    {
+        try {
+            return $this->migration->migrate($directory);
+        } catch (PDOException $e) {
+            $this->error = $e->getMessage();
+            return [];
+        }
+    }
+    
+    /**
+     * Rollback the last batch of migrations.
+     *
+     * Example usage:
+     * ```php
+     * $rolledBack = $database->rollbackMigrations('/path/to/migrations');
+     * echo "Rolled back migrations: " . implode(", ", $rolledBack);
+     * ```
+     *
+     * @param string $directory The directory containing migration files
+     * @param int $steps Number of batches to rollback (default: 1)
+     * @return array Array of rolled back migrations
+     */
+    public function rollbackMigrations(string $directory, int $steps = 1): array
+    {
+        try {
+            return $this->migration->rollback($directory, $steps);
+        } catch (PDOException $e) {
+            $this->error = $e->getMessage();
+            return [];
+        }
+    }
+    
+    /**
+     * Reset all migrations (rollback everything).
+     *
+     * Example usage:
+     * ```php
+     * $rolledBack = $database->reset('/path/to/migrations');
+     * echo "Reset migrations: " . implode(", ", $rolledBack);
+     * ```
+     *
+     * @param string $directory The directory containing migration files
+     * @return array Array of rolled back migrations
+     */
+    public function reset(string $directory): array
+    {
+        try {
+            return $this->migration->reset($directory);
+        } catch (PDOException $e) {
+            $this->error = $e->getMessage();
+            return [];
+        }
+    }
+    
+    /**
+     * Refresh all migrations (reset and re-run).
+     *
+     * Example usage:
+     * ```php
+     * $result = $database->refresh('/path/to/migrations');
+     * echo "Reset migrations: " . implode(", ", $result['rolledBack']);
+     * echo "Executed migrations: " . implode(", ", $result['executed']);
+     * ```
+     *
+     * @param string $directory The directory containing migration files
+     * @return array Array with rolled back and executed migrations
+     */
+    public function refresh(string $directory): array
+    {
+        try {
+            return $this->migration->refresh($directory);
+        } catch (PDOException $e) {
+            $this->error = $e->getMessage();
+            return ['rolledBack' => [], 'executed' => []];
+        }
     }
     
     /**
