@@ -34,6 +34,7 @@ $results = $db->query('SELECT * FROM users');
 | `username` | Database username | Yes (except SQLite) |
 | `password` | Database password | No |
 | `charset` | Character set | No |
+| `collation` | Collation (MySQL specific) | No |
 | `prefix` | Table prefix | No |
 | `port` | Database port | No |
 
@@ -214,10 +215,3 @@ try {
     echo "Transaction failed: " . $e->getMessage();
 }
 ```
-
-## Security Considerations
-
-- Always use parameterized queries to prevent SQL injection
-- Store database credentials securely
-- Use the minimum required privileges for the database user
-- Enable SSL/TLS for database connections when possible

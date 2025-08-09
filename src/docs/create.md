@@ -1,6 +1,6 @@
 # Create Table Functionality
 
-The `create` method allows you to create database tables with specified columns and optional table settings.
+The `create` method allows you to create database tables with specified columns and optional table settings. FoxQL supports PostgreSQL, MySQL, SQLite, Sybase, Oracle, and MSSQL databases.
 
 ## Method Signature
 
@@ -71,7 +71,7 @@ $database->create("account", [
 ]);
 ```
 
-This will generate SQL similar to:
+This will generate SQL similar to (MySQL example):
 
 ```sql
 CREATE TABLE IF NOT EXISTS account (
@@ -106,7 +106,7 @@ $database->create("posts", [
     ],
     "FOREIGN KEY (<user_id>) REFERENCES users(<id>) ON DELETE CASCADE"
 ], [
-    "ENGINE" => "InnoDB"
+    "ENGINE" => "InnoDB"  // MySQL specific option
 ]);
 ```
 
@@ -173,3 +173,56 @@ if ($result === null) {
     echo "Table created successfully!";
 }
 ```
+
+## Database-Specific Syntax
+
+FoxQL supports multiple database types, each with its own SQL syntax. When using the `create` method, the library automatically adapts the SQL syntax based on the database type you're connected to.
+
+### PostgreSQL Example
+
+```php
+$database = new \FoxQL\FoxQL([
+    'type' => 'pgsql',
+    'database' => 'my_database',
+    'host' => 'localhost',
+    'username' => 'postgres',
+    'password' => 'password'
+]);
+
+$database->create("users", [
+    "id" => [
+        "SERIAL",
+        "PRIMARY KEY"
+    ],
+    "username" => [
+        "VARCHAR(50)",
+        "NOT NULL",
+        "UNIQUE"
+    ]
+]);
+```
+
+### SQLite Example
+
+```php
+$database = new \FoxQL\FoxQL([
+    'type' => 'sqlite',
+    'database' => 'database.sqlite'
+]);
+
+$database->create("users", [
+    "id" => [
+        "INTEGER",
+        "PRIMARY KEY AUTOINCREMENT"
+    ],
+    "username" => [
+        "TEXT",
+        "NOT NULL",
+        "UNIQUE"
+    ]
+]);
+```
+
+## Important Note
+
+When working with different database types, be aware of the syntax differences for data types, constraints, and table options. Enter your SQL syntax according to the specific database type you're using.

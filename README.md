@@ -68,12 +68,12 @@ Explore our comprehensive documentation for detailed usage instructions:
 
 ### 🔄 Core Operations
 
-| Basic Operations | Data Manipulation | Schema Management |
-| ---------------- | ----------------- | ----------------- |
-| [Connection](src/docs/connect.md) | [Insert](src/docs/insert.md) | [Create](src/docs/create.md) |
-| [Select](src/docs/select.md) | [Update](src/docs/update.md) | [Drop](src/docs/drop.md) |
-| [Get](src/docs/get.md) | [Delete](src/docs/delete.md) | [Action](src/docs/action.md) |
-| [Has](src/docs/has.md) | [Replace](src/docs/replace.md) | |
+| Basic Operations | Data Manipulation | Schema Management | Raw SQL |
+| ---------------- | ----------------- | ----------------- | ------- |
+| [Connection](src/docs/connect.md) | [Insert](src/docs/insert.md) | [Create Table](src/docs/create.md) | [Query](src/docs/query.md) |
+| [Select](src/docs/select.md) | [Update](src/docs/update.md) | [Drop Table](src/docs/drop.md) | [Execute](src/docs/execute.md) |
+| [Get](src/docs/get.md) | [Delete](src/docs/delete.md) | [Action](src/docs/action.md) | |
+| [Has](src/docs/has.md) | [Replace](src/docs/replace.md) | | |
 
 ### 📊 Aggregation Functions
 

@@ -1,6 +1,6 @@
 # Drop Table Functionality
 
-The `drop` method allows you to drop database tables. It's convenient when the table prefix is set.
+The `drop` method allows you to drop database tables. It's convenient when the table prefix is set. FoxQL supports PostgreSQL, MySQL, SQLite, Sybase, Oracle, and MSSQL databases.
 
 ## Method Signature
 
@@ -24,7 +24,7 @@ public function drop(string $table): ?PDOStatement
 $database->drop("account");
 ```
 
-This will generate SQL similar to:
+This will generate SQL similar to (MySQL example):
 
 ```sql
 DROP TABLE IF EXISTS `account`
@@ -43,7 +43,7 @@ $database = new FoxQL([
 $database->drop("account");
 ```
 
-This will generate SQL similar to:
+This will generate SQL similar to (MySQL example):
 
 ```sql
 DROP TABLE IF EXISTS `wp_account`
@@ -79,3 +79,48 @@ if ($result === null) {
 2. The method uses `DROP TABLE IF EXISTS` to prevent errors when the table doesn't exist.
 
 3. Table identifiers are properly quoted according to the database type (e.g., backticks for MySQL, double quotes for PostgreSQL).
+
+## Database-Specific Syntax
+
+FoxQL supports multiple database types, each with its own SQL syntax. When using the `drop` method, the library automatically adapts the SQL syntax based on the database type you're connected to.
+
+### PostgreSQL Example
+
+```php
+$database = new \FoxQL\FoxQL([
+    'type' => 'pgsql',
+    'database' => 'my_database',
+    'host' => 'localhost',
+    'username' => 'postgres',
+    'password' => 'password'
+]);
+
+$database->drop("users");
+```
+
+This will generate SQL similar to:
+
+```sql
+DROP TABLE IF EXISTS "users"
+```
+
+### SQLite Example
+
+```php
+$database = new \FoxQL\FoxQL([
+    'type' => 'sqlite',
+    'database' => 'database.sqlite'
+]);
+
+$database->drop("users");
+```
+
+This will generate SQL similar to:
+
+```sql
+DROP TABLE IF EXISTS "users"
+```
+
+## Important Note
+
+When working with different database types, be aware that the SQL syntax may vary slightly. FoxQL handles these differences automatically, but it's good to understand the underlying SQL being generated for your specific database type.
