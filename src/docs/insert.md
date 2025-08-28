@@ -120,7 +120,7 @@ if ($statement) {
     // You can use other PDOStatement methods here
 }
 ```
-```
+```php
 if ($result !== null) {
     echo "Insert successful! Affected rows: {$result}\n";
 } else {
